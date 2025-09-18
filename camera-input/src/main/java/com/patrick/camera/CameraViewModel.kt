@@ -75,10 +75,24 @@ class CameraViewModel(
         _calibrationProgress.value = progress
     }
 
-    override fun onCalibrationCompleted(newThreshold: Float, minEar: Float, maxEar: Float, avgEar: Float) {
+    override fun onCalibrationCompleted(
+        newThreshold: Float,
+        minEar: Float,
+        maxEar: Float,
+        avgEar: Float
+    ) {
         _isCalibrating.value = false
         _calibrationProgress.value = 100
+
+        // ✅ 校正結束後，更新偵測參數
+        fatigueDetectionManager.setDetectionParameters(
+            earThreshold = newThreshold
+        )
+
+        // ✅ 確保正式進入偵測狀態
+        fatigueDetectionManager.startDetection()
     }
+
 
     override fun onModerateFatigue() {
         _fatigueLevel.value = FatigueLevel.HIGH
