@@ -49,13 +49,14 @@ class CameraViewModel(
             }
             cameraUseCase.initializeCamera(previewView, lifecycleOwner)
 
-            // 啟動疲勞檢測
-            fatigueDetectionManager.startDetection()
+            // ❌ 不要一開始就啟動偵測
+            // fatigueDetectionManager.startDetection()
 
-            // 開始校正流程
+            // ✅ 先做校正
             fatigueDetectionManager.startCalibration()
         }
     }
+
 
     fun releaseCamera() {
         viewModelScope.launch {
@@ -92,6 +93,7 @@ class CameraViewModel(
         // ✅ 確保正式進入偵測狀態
         fatigueDetectionManager.startDetection()
     }
+
 
 
     override fun onModerateFatigue() {

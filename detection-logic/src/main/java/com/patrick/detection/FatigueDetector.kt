@@ -511,29 +511,31 @@ class FatigueDetector {
             stopCalibration()
             return
         }
-        
-        // 計算 EAR 值的統計數據
+
         val sortedValues = calibrationEarValues.sorted()
         val minEar = sortedValues.first()
         val maxEar = sortedValues.last()
         val avgEar = calibrationEarValues.average().toFloat()
-        
-        // 計算新的閾值：使用平均值的一定比例作為閾值
-        val newThreshold = avgEar * 0.7f // 使用平均值的 70% 作為閾值
-        
-        // 更新閾值
+
+        val newThreshold = avgEar * 0.7f
         currentEarThreshold = newThreshold
-        
+
         Log.d(TAG, "校正完成！")
         Log.d(TAG, "EAR 統計: 最小值=$minEar, 最大值=$maxEar, 平均值=$avgEar")
         Log.d(TAG, "新閾值: $newThreshold (原閾值: ${DEFAULT_EAR_THRESHOLD})")
-        
-        // 通知校正完成
+
         fatigueListener?.onCalibrationCompleted(newThreshold, minEar, maxEar, avgEar)
-        
-        // 停止校正
+
         stopCalibration()
+
+        // ✅ 校正結束後，自動開始疲勞檢測
+        fatigueListener?.let {
+            if (it is FatigueDetectionManager) {
+                it.startDetection()
+            }
+        }
     }
+
     
     /**
      * 獲取校正狀態

@@ -274,7 +274,11 @@ class FatigueDetectionManager(
     override fun onCalibrationCompleted(newThreshold: Float, minEar: Float, maxEar: Float, avgEar: Float) {
         Log.d(TAG, "校正完成！新閾值: $newThreshold")
         uiCallback?.onCalibrationCompleted(newThreshold, minEar, maxEar, avgEar)
+
+        // ✅ 校正結束後馬上啟動偵測
+        startDetection()
     }
+
 
     fun clearModerateFatigue() {
         alertManager.onModerateFatigueCleared()
