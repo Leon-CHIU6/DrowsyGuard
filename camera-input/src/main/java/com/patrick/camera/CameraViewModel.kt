@@ -27,10 +27,19 @@ class CameraViewModel(
 
     private val _calibrationProgress = MutableStateFlow(0)
     val calibrationProgress: StateFlow<Int> = _calibrationProgress
+
     private val _isCalibrating = MutableStateFlow(false)
     val isCalibrating: StateFlow<Boolean> = _isCalibrating
+
     private val _showFatigueDialog = MutableStateFlow(false)
     val showFatigueDialog: StateFlow<Boolean> = _showFatigueDialog
+
+    // ✅ 新增：分數狀態
+    private val _fatigueScore = MutableStateFlow(0)
+    val fatigueScore: StateFlow<Int> = _fatigueScore
+
+    private val _fatigueScoreLevel = MutableStateFlow(FatigueLevel.NORMAL)
+    val fatigueScoreLevel: StateFlow<FatigueLevel> = _fatigueScoreLevel
 
     fun initializeCamera(previewView: PreviewView, lifecycleOwner: LifecycleOwner) {
         viewModelScope.launch {
@@ -39,10 +48,10 @@ class CameraViewModel(
                 fatigueDetectionManager.processFaceLandmarks(result)
             }
             cameraUseCase.initializeCamera(previewView, lifecycleOwner)
-            
+
             // 啟動疲勞檢測
             fatigueDetectionManager.startDetection()
-            
+
             // 開始校正流程
             fatigueDetectionManager.startCalibration()
         }
@@ -56,30 +65,43 @@ class CameraViewModel(
 
     // FatigueUiCallback 實現
     override fun onBlink() {}
+
     override fun onCalibrationStarted() {
         _isCalibrating.value = true
         _calibrationProgress.value = 0
     }
+
     override fun onCalibrationProgress(progress: Int, currentEar: Float) {
         _calibrationProgress.value = progress
     }
+
     override fun onCalibrationCompleted(newThreshold: Float, minEar: Float, maxEar: Float, avgEar: Float) {
         _isCalibrating.value = false
         _calibrationProgress.value = 100
     }
+
     override fun onModerateFatigue() {
-        _fatigueLevel.value = FatigueLevel.MODERATE
+        _fatigueLevel.value = FatigueLevel.HIGH
         _showFatigueDialog.value = true
     }
+
     override fun onUserAcknowledged() {
         _fatigueLevel.value = FatigueLevel.NORMAL
         _showFatigueDialog.value = false
     }
+
     override fun onUserRequestedRest() {
         _fatigueLevel.value = FatigueLevel.SEVERE
         _showFatigueDialog.value = true
     }
+
     override fun onFatigueAlert(message: String) {
         // 可根據需求處理警告，例如寫入 log、更新狀態流、觸發 UI 等
     }
-} 
+
+    // ✅ 新增：分數回呼實作
+    override fun onScoreUpdated(score: Int, level: FatigueLevel) {
+        _fatigueScore.value = score
+        _fatigueScoreLevel.value = level
+    }
+}

@@ -50,7 +50,7 @@ class FatigueAlertManager(private val context: Context) : FatigueDialogManager.F
     
     // 警报文本
     private val alertMessages = mapOf(
-        FatigueLevel.MODERATE to "⚠️ 檢測到疲勞跡象，請注意休息！",
+        FatigueLevel.HIGH to "⚠️ 檢測到疲勞跡象，請注意休息！",
         FatigueLevel.SEVERE to "🚨 嚴重疲勞警告！請立即停止駕駛或工作！"
     )
     
@@ -65,7 +65,7 @@ class FatigueAlertManager(private val context: Context) : FatigueDialogManager.F
         Log.d(TAG, "检测到疲劳，级别: ${result.fatigueLevel}")
         
         when (result.fatigueLevel) {
-            FatigueLevel.MODERATE -> {
+            FatigueLevel.HIGH -> {
                 triggerModerateFatigueAlert(result.events)
             }
             FatigueLevel.SEVERE -> {
@@ -298,7 +298,7 @@ class FatigueAlertManager(private val context: Context) : FatigueDialogManager.F
             
             // 设置文本颜色
             textView.setTextColor(when (result.fatigueLevel) {
-                FatigueLevel.MODERATE -> android.graphics.Color.parseColor("#FFA500") // 橙色
+                FatigueLevel.HIGH -> android.graphics.Color.parseColor("#FFA500") // 橙色
                 FatigueLevel.SEVERE -> android.graphics.Color.parseColor("#FF0000")   // 红色
                 else -> android.graphics.Color.BLACK
             })

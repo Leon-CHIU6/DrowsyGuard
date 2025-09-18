@@ -14,8 +14,9 @@ data class FatigueDetectionResult(
  */
 enum class FatigueLevel {
     NORMAL,     // 正常
-    MODERATE,   // 中度疲劳
-    SEVERE      // 严重疲劳
+    MEDIUM,     // 輕度疲勞
+    HIGH,       // 高度疲勞,
+    SEVERE   // 严重疲劳
 }
 
 /**
@@ -38,4 +39,4 @@ interface FatigueDetectionListener {
     fun onCalibrationStarted() {}
     fun onCalibrationProgress(progress: Int, currentEar: Float) {}
     fun onCalibrationCompleted(newThreshold: Float, minEar: Float, maxEar: Float, avgEar: Float) {}
-} 
+}
