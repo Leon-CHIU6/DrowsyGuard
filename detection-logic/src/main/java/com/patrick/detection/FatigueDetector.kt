@@ -382,7 +382,7 @@ class FatigueDetector {
     private fun determineFatigueLevel(): FatigueLevel {
         return when {
             fatigueEventCount >= currentFatigueEventThreshold * 2 -> FatigueLevel.SEVERE
-            fatigueEventCount >= currentFatigueEventThreshold -> FatigueLevel.MODERATE
+            fatigueEventCount >= currentFatigueEventThreshold -> FatigueLevel.HIGH
             else -> FatigueLevel.NORMAL
         }
     }

@@ -100,16 +100,19 @@ class FatigueOverlayView @JvmOverloads constructor(
     private fun drawFatigueStatusIndicator(canvas: Canvas, result: FatigueDetectionResult) {
         val statusText = when (result.fatigueLevel) {
             FatigueLevel.NORMAL -> "正常"
-            FatigueLevel.MODERATE -> "中度疲劳"
-            FatigueLevel.SEVERE -> "严重疲劳"
+            FatigueLevel.MEDIUM -> "輕度疲勞"
+            FatigueLevel.HIGH -> "高度疲勞"
+            FatigueLevel.SEVERE -> "嚴重疲勞"
         }
-        
+
         val statusColor = when (result.fatigueLevel) {
             FatigueLevel.NORMAL -> Color.parseColor(Constants.Colors.FATIGUE_NORMAL)
-            FatigueLevel.MODERATE -> Color.parseColor(Constants.Colors.FATIGUE_MODERATE)
+            FatigueLevel.MEDIUM -> Color.parseColor(Constants.Colors.FATIGUE_MEDIUM)
+            FatigueLevel.HIGH -> Color.parseColor(Constants.Colors.FATIGUE_HIGH)
             FatigueLevel.SEVERE -> Color.parseColor(Constants.Colors.FATIGUE_SEVERE)
         }
-        
+
+
         fatigueStatusPaint.color = statusColor
         
         // 计算状态显示位置（右上角）
@@ -129,7 +132,7 @@ class FatigueOverlayView @JvmOverloads constructor(
      */
     private fun drawFatigueAlert(canvas: Canvas, result: FatigueDetectionResult) {
         val alertMessage = when (result.fatigueLevel) {
-            FatigueLevel.MODERATE -> "⚠️ 檢測到疲勞跡象，請注意休息！"
+            FatigueLevel.HIGH -> "⚠️ 檢測到疲勞跡象，請注意休息！"
             FatigueLevel.SEVERE -> "🚨 嚴重疲勞警告！請立即停止駕駛或工作！"
             else -> ""
         }
@@ -138,14 +141,14 @@ class FatigueOverlayView @JvmOverloads constructor(
         
         // 设置警报背景颜色
         alertBackgroundPaint.color = when (result.fatigueLevel) {
-            FatigueLevel.MODERATE -> Color.parseColor(Constants.Colors.WARNING_BACKGROUND)
+            FatigueLevel.HIGH -> Color.parseColor(Constants.Colors.WARNING_BACKGROUND)
             FatigueLevel.SEVERE -> Color.RED
             else -> Color.TRANSPARENT
         }
         
         // 设置警报文本颜色
         alertTextPaint.color = when (result.fatigueLevel) {
-            FatigueLevel.MODERATE -> Color.BLACK
+            FatigueLevel.HIGH -> Color.BLACK
             FatigueLevel.SEVERE -> Color.WHITE
             else -> Color.BLACK
         }
@@ -184,7 +187,7 @@ class FatigueOverlayView @JvmOverloads constructor(
                     Color.RED to "👁"
                 }
                 is FatigueEvent.Yawn -> {
-                    Color.parseColor(Constants.Colors.FATIGUE_MODERATE) to "😮"
+                    Color.parseColor(Constants.Colors.FATIGUE_MEDIUM) to "😮"
                 }
                 is FatigueEvent.HighBlinkFrequency -> {
                     Color.YELLOW to "👀"
